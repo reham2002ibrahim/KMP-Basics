@@ -53,4 +53,6 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.7")
     debugImplementation(libs.compose.ui.tooling)
     implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation("io.insert-koin:koin-androidx-compose:3.4.3")
+    implementation("io.insert-koin:koin-android:3.4.3")
 }

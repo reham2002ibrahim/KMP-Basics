@@ -1,4 +1,4 @@
-package com.example.day11kmp.android
+package com.example.articles.android
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
@@ -34,11 +35,13 @@ import androidx.navigation.safe.args.generator.ErrorMessage
 import coil.compose.AsyncImage
 import com.example.articles.Articles.Article
 import com.example.articles.Articles.ArticlesViewModel
+import com.example.articles.Greeting
+import org.koin.androidx.compose.getViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel : ArticlesViewModel by viewModels()
+//        val viewModel : ArticlesViewModel by viewModels()
         setContent {
             MyApplicationTheme {
                 Surface(
@@ -52,14 +55,14 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable("articles") {
                             ArticlesScreen(
-                                articlesViewModel = viewModel,
+                                articlesViewModel = getViewModel<ArticlesViewModel>(),
                                 onAboutButtonClick = {
                                     navController.navigate("greeting")
                                 }
                             )
                         }
                         composable("greeting") {
-//                            GreetingView(Greeting().greet())
+                            GreetingView(Greeting().greet())
                         }
                     }
                 }
@@ -95,7 +98,9 @@ fun ArticlesScreen(
             articlesState.error?.isNotEmpty() == true -> {
                 ErrorMessage(
                     message = articlesState.error!!,
-                    path = "", line = 5, column = 5
+                    path = "",
+                    line = 5,
+                    column = 5
                 )
             }
             articlesState.articles.isNotEmpty() -> {
@@ -118,7 +123,7 @@ fun ArticleItemView(article: Article) {
             .padding(16.dp)
     ) {
         AsyncImage(
-            model = article.imageUrl,
+            model = article.urlToImage ?: " ",
             contentDescription = null
         )
         Spacer(modifier = Modifier.height(4.dp))
@@ -130,10 +135,10 @@ fun ArticleItemView(article: Article) {
             )
         )
         Spacer(modifier = Modifier.height(8.dp))
-        Text(text = article.desc)
+        Text(text = article.description ?: "")
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = article.date,
+            text = article.publishedAt,
             style = TextStyle(color = Color.Gray),
             textAlign = TextAlign.End,
             modifier = Modifier.align(Alignment.End)
@@ -153,4 +158,3 @@ fun AppBar(onAboutClick: () -> Unit) {
         }
     )
 }
-
